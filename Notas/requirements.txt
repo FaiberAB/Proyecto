@@ -1,0 +1,4 @@
+flask
+jinja2
+flask_sqlalchemy
+tensorflow==2.3.1

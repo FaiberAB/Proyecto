@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/style.css">
+  <title>Crear Nota</title>
+</head>
+<body>
+
+  <main>
+    <div class="form-container">
+      <h1 class="main__title">Crear Nueva Nota</h1>
+
+      <form action="{{ url_for('form_create') }}" method="POST">
+        <label for="title">Título:</label>
+        <input type="text" name="title" id="title" required placeholder="Ingresa el título de la nota" value="{{ request.form['title'] if request.method == 'POST' else '' }}">
+
+        <label for="subtitle">Subtítulo:</label>
+        <input type="text" name="subtitle" id="subtitle" required placeholder="Ingresa el subtítulo de la nota" value="{{ request.form['subtitle'] if request.method == 'POST' else '' }}">
+
+        <label for="text">Texto:</label>
+        <textarea name="text" id="text" placeholder="Escribe tu nota aquí">{{ request.form['text'] if request.method == 'POST' else '' }}</textarea>
+
+        <button type="button" onclick="startRecording()" class="voice_button">Grabar nota de voz</button>
+
+        <div id="voice_result" class="voice-result">
+          <p id="result_text">Aquí aparecerá el texto de tu nota de voz...</p>
+        </div>
+
+        <button type="submit" class="submit_button">Guardar Nota</button>
+      </form>
+    </div>
+  </main>
+
+  <footer></footer>
+
+  <script>
+    function startRecording() {
+      fetch('/speech_to_text', {
+        method: 'POST',
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('result_text').innerText = data;
+        document.getElementById('text').value = data;
+      })
+      .catch(error => {
+        console.error("Error al grabar:", error);
+        document.getElementById('result_text').innerText = "Hubo un error al intentar reconocer la voz.";
+      });
+    }
+  </script>
+
+</body>
+</html>
